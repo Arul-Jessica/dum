@@ -2,15 +2,44 @@
   <div class="card-body">
     <!-- [formGroup] binds this HTML form to our 'orderForm' FormGroup in the TypeScript. -->
     <form [formGroup]="orderForm" (ngSubmit)="onSubmit()">
-
+      <div class="mb-3">
+        <label for="assetId" class="form-label">Asset</label>
+        <select id="assetId" class="form-select" formControlName="assetId">
+          <option [ngValue]="null" disabled>Select an asset to trade</option>
+          <!-- We use *ngFor to loop through the assets passed in from the parent -->
+          <option *ngFor="let asset of assets" [ngValue]="asset.id">
+            {{ asset.name }} ({{ asset.symbol }})
+          </option>
+        </select>
+        <div
+          *ngIf="formControls['assetId'].touched && formControls['assetId'].errors"
+          class="text-danger small mt-1"
+        >
+          <div *ngIf="formControls['assetId'].errors['required']">Please select an asset.</div>
+        </div>
+      </div>
       <!-- Order Type -->
       <div class="mb-3">
         <label class="form-label">Action</label>
         <div class="btn-group w-100" role="group">
-          <input type="radio" class="btn-check" formControlName="orderType" id="buy-option" value="BUY" autocomplete="off">
+          <input
+            type="radio"
+            class="btn-check"
+            formControlName="orderType"
+            id="buy-option"
+            value="BUY"
+            autocomplete="off"
+          />
           <label class="btn btn-outline-success" for="buy-option">BUY</label>
 
-          <input type="radio" class="btn-check" formControlName="orderType" id="sell-option" value="SELL" autocomplete="off">
+          <input
+            type="radio"
+            class="btn-check"
+            formControlName="orderType"
+            id="sell-option"
+            value="SELL"
+            autocomplete="off"
+          />
           <label class="btn btn-outline-danger" for="sell-option">SELL</label>
         </div>
       </div>
@@ -18,20 +47,40 @@
       <!-- Quantity Input -->
       <div class="mb-3">
         <label for="quantity" class="form-label">Quantity</label>
-        <input type="number" class="form-control" id="quantity" formControlName="quantity" placeholder="e.g., 10.5">
+        <input
+          type="number"
+          class="form-control"
+          id="quantity"
+          formControlName="quantity"
+          placeholder="e.g., 10.5"
+        />
         <!-- Error messages for the 'quantity' control -->
-        <div *ngIf="formControls['quantity'].touched && formControls['quantity'].errors" class="text-danger small mt-1">
+        <div
+          *ngIf="formControls['quantity'].touched && formControls['quantity'].errors"
+          class="text-danger small mt-1"
+        >
           <div *ngIf="formControls['quantity'].errors['required']">Quantity is required.</div>
-          <div *ngIf="formControls['quantity'].errors['min']">Quantity must be a positive number.</div>
+          <div *ngIf="formControls['quantity'].errors['min']">
+            Quantity must be a positive number.
+          </div>
         </div>
       </div>
 
       <!-- Price Input -->
       <div class="mb-3">
         <label for="price" class="form-label">Price (per unit)</label>
-        <input type="number" class="form-control" id="price" formControlName="price" placeholder="e.g., 50.25">
-         <!-- Error messages for the 'price' control -->
-        <div *ngIf="formControls['price'].touched && formControls['price'].errors" class="text-danger small mt-1">
+        <input
+          type="number"
+          class="form-control"
+          id="price"
+          formControlName="price"
+          placeholder="e.g., 50.25"
+        />
+        <!-- Error messages for the 'price' control -->
+        <div
+          *ngIf="formControls['price'].touched && formControls['price'].errors"
+          class="text-danger small mt-1"
+        >
           <div *ngIf="formControls['price'].errors['required']">Price is required.</div>
           <div *ngIf="formControls['price'].errors['min']">Price must be a positive number.</div>
         </div>
@@ -39,8 +88,16 @@
 
       <!-- Submit Button -->
       <div class="d-grid mt-4">
-        <button type="submit" class="btn btn-primary" [disabled]="orderForm.invalid || isSubmitting">
-          <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2" role="status"></span>
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="orderForm.invalid || isSubmitting"
+        >
+          <span
+            *ngIf="isSubmitting"
+            class="spinner-border spinner-border-sm me-2"
+            role="status"
+          ></span>
           Place Order
         </button>
       </div>
