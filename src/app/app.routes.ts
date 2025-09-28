@@ -1,26 +1,29 @@
+// File: src/app/app.routes.ts
 import { Routes } from '@angular/router';
 import { LoginComponent } from './features/auth/login/login.component';
+import { RegisterComponent } from './features/auth/register/register.component';
 import { authGuard } from './core/guards/auth.guard';
-import { loginRedirectGuard } from './core/guards/login-redirect.guard';
 
 export const routes: Routes = [
+  // --- Public Routes ---
   { path: 'login', component: LoginComponent },
-  // The root path will redirect logged-in users based on their role
-  { path: '', canActivate: [loginRedirectGuard], children: [] },
+  { path: 'register', component: RegisterComponent },
 
-  // Future protected routes will go here, protected by authGuard
+  // --- Protected User Route ---
   {
-    path: 'user',
-    canActivate: [authGuard],
-    loadComponent: () =>
-      import('./features/placeholder/placeholder.component').then((c) => c.PlaceholderComponent),
-  },
-  {
-    path: 'admin',
-    canActivate: [authGuard], // We will add a specific adminGuard later
-    loadComponent: () =>
-      import('./features/placeholder/placeholder.component').then((c) => c.PlaceholderComponent),
+    path: 'user/dashboard', // A clear, specific path
+    canActivate: [authGuard], // Protected by our guard
+    loadComponent: () => import('./features/user/pages/user-dashboard/user-dashboard.component').then(c => c.UserDashboardComponent)
   },
 
-  { path: '**', redirectTo: '/login' },
+  // --- Protected Admin Route ---
+  {
+    path: 'admin/dashboard', // A clear, specific path
+    canActivate: [authGuard], // Protected by our guard
+    loadComponent: () => import('./features/admin/pages/admin-dashboard/admin-dashboard.component').then(c => c.AdminDashboardComponent)
+  },
+
+  // --- Default and Wildcard Routes ---
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
+  { path: '**', redirectTo: '/login' }
 ];
