@@ -14,6 +14,6 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withInterceptors([jwtInterceptor]), withFetch()),
     importProvidersFrom(FormsModule),
     provideAnimations(), // Required for ngx-toastr
-    provideToastr({ timeOut: 3000, positionClass: 'toast-bottom-right', preventDuplicates: true }),
-  ]
+    provideToastr({ timeOut: 4000, positionClass: 'toast-bottom-right', preventDuplicates: true }),
+  ],
 };
