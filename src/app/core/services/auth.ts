@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 import { jwtDecode } from 'jwt-decode';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
   private apiUrl = `${environment.apiUrl}/api/auth`; // Your backend's auth endpoint
@@ -15,13 +15,22 @@ export class AuthService {
   private loggedIn = new BehaviorSubject<boolean>(this.hasToken());
   isLoggedIn$ = this.loggedIn.asObservable(); // Expose as a read-only observable
 
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(private http: HttpClient, private router: Router) {}
 
   // --- Core Methods ---
 
+  // In AuthService...
+
+  // Add this method
+  register(userInfo: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/register`, userInfo);
+  }
+
+  // ... (login, logout, and helper methods are the same)
+
   login(credentials: any): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/login`, credentials).pipe(
-      tap(response => {
+      tap((response) => {
         if (response?.token) {
           localStorage.setItem('authToken', response.token);
           this.loggedIn.next(true); // Notify the app that the user is logged in
