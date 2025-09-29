@@ -1,0 +1,72 @@
+<div class="card shadow-sm">
+  <div class="card-body">
+    <form [formGroup]="transferForm" (ngSubmit)="onSubmit()">
+      <!-- Recipient -->
+      <div class="mb-3">
+        <label for="toPartyId" class="form-label">Recipient Party ID</label>
+        <input
+          type="number"
+          class="form-control"
+          id="toPartyId"
+          formControlName="toPartyId"
+          placeholder="Enter recipient's ID"
+        />
+        <div
+          *ngIf="formControls['toPartyId'].touched && formControls['toPartyId'].errors"
+          class="text-danger small mt-1"
+        >
+          <div *ngIf="formControls['toPartyId'].errors['required']">Recipient ID is required.</div>
+          <div *ngIf="formControls['toPartyId'].errors['pattern']">Must be a valid number.</div>
+        </div>
+      </div>
+
+      <!-- Asset Selection -->
+      <div class="mb-3">
+        <label for="assetId" class="form-label">Asset to Send</label>
+        <select id="assetId" class="form-select" formControlName="assetId">
+          <option [ngValue]="null" disabled>Select an asset</option>
+          <option *ngFor="let asset of assets" [ngValue]="asset.id">
+            {{ asset.name }} ({{ asset.symbol }})
+          </option>
+        </select>
+        <div
+          *ngIf="formControls['assetId'].touched && formControls['assetId'].errors"
+          class="text-danger small mt-1"
+        >
+          Required.
+        </div>
+      </div>
+
+      <!-- Quantity -->
+      <div class="mb-3">
+        <label for="quantity" class="form-label">Quantity</label>
+        <input
+          type="number"
+          class="form-control"
+          id="quantity"
+          formControlName="quantity"
+          placeholder="e.g., 10.5"
+        />
+        <div
+          *ngIf="formControls['quantity'].touched && formControls['quantity'].errors"
+          class="text-danger small mt-1"
+        >
+          <div *ngIf="formControls['quantity'].errors['required']">Quantity is required.</div>
+          <div *ngIf="formControls['quantity'].errors['min']">Quantity must be positive.</div>
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="d-grid mt-4">
+        <button
+          type="submit"
+          class="btn btn-success"
+          [disabled]="transferForm.invalid || isSubmitting"
+        >
+          <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2"></span>
+          Send Tokens
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

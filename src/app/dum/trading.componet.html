@@ -1,0 +1,16 @@
+ <!-- NEW: Transfer Column -->
+  <div class="col-lg-7 mb-4">
+    <div class="row">
+      <div class="col-12 mb-4">
+        <h4 class="mb-3">Direct Token Transfer</h4>
+        <app-transfer-form
+          [assets]="assets$ | async"
+          (transferSubmit)="handleTransfer($event)">
+        </app-transfer-form>
+      </div>
+      <div class="col-12">
+        <h4 class="mb-3">My Open Orders</h4>
+        <app-open-orders-table [orders]="openOrders$ | async"></app-open-orders-table>
+      </div>
+    </div>
+    

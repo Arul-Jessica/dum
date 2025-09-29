@@ -1,45 +1,33 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ToastrService } from 'ngx-toastr';
-import { PlaceOrderFormComponent } from './components/place-order-form/place-order-form.component';
-import { TradingService } from './services/trading.service';
-import { AuthService } from '../../core/services/auth.service';
-import { PlaceOrderRequest } from './models/trading.model';
+// In trading.component.ts
+import { TransferFormComponent } from './components/transfer-form/transfer-form.component';
+import { TransferRequest } from './models/trading.model';
 
 @Component({
-  selector: 'app-trading',
-  standalone: true,
-  imports: [CommonModule, PlaceOrderFormComponent],
-  templateUrl: './trading.component.html',
-  styleUrls: ['./trading.component.scss']
+  //...
+  imports: [CommonModule, PlaceOrderFormComponent, OpenOrdersTableComponent, TransferFormComponent], // <-- Add TransferFormComponent
 })
-export class TradingComponent {
+export class TradingComponent implements OnInit {
+  //... (existing properties and methods)
 
-  constructor(
-    private tradingService: TradingService,
-    private authService: AuthService,
-    private toastr: ToastrService
-  ) {}
-
-  // This method is the event handler for the child form's 'orderPlaced' event.
-  handlePlaceOrder(request: PlaceOrderRequest): void {
-    const partyId = this.authService.getUserPartyId();
-    if (!partyId) {
-      this.toastr.error("Could not place order: User is not properly authenticated.", "Authentication Error");
+  // Event handler for the new transfer form
+  handleTransfer(request: Omit<TransferRequest, 'fromPartyId'>): void {
+    const fromPartyId = this.authService.getUserPartyId();
+    if (!fromPartyId) {
+      this.toastr.error("Cannot perform transfer: User not authenticated.", "Error");
       return;
     }
 
-    // Replace the placeholder partyId with the real one from the logged-in user.
-    request.partyId = partyId;
+    // Complete the request object with the sender's ID
+    const fullRequest: TransferRequest = { ...request, fromPartyId };
 
-    this.tradingService.placeOrder(request).subscribe({
-      next: (response) => {
-        this.toastr.success(`Order placed successfully! Order ID: ${response.id}`, 'Success');
-        // In a real app, we would now refresh the user's order history list.
+    this.tradingService.transferTokens(fullRequest).subscribe({
+      next: () => {
+        this.toastr.success('Tokens transferred successfully!', 'Success');
+        // We should refresh the main dashboard data after a transfer
+        // We'll add this later if we create a shared data service.
       },
       error: (err) => {
-        // We display the actual error message from the backend.
-        this.toastr.error(err.error?.message || 'An unknown error occurred.', 'Order Failed');
+        this.toastr.error(err.error?.message || 'Transfer failed.', 'Error');
       }
     });
   }
