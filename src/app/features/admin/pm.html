@@ -1,0 +1,80 @@
+<div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-2">
+  <h2 class="h2">Party Management</h2>
+  <button class="btn btn-primary">
+    <i class="bi bi-plus-circle me-2"></i>Create New Party
+  </button>
+</div>
+
+<!-- Stats Row -->
+<div class="row mb-4">
+  <div class="col-md-4">
+    <app-stats-card title="Total Parties" [value]="totalParties" icon="bi-people-fill"></app-stats-card>
+  </div>
+  <div class="col-md-4">
+    <app-stats-card title="Active Parties" [value]="activeParties" icon="bi-person-check-fill" bgColor="bg-white"></app-stats-card>
+  </div>
+  <div class="col-md-4">
+    <!-- A more creative stats card for the breakdown -->
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h6 class="card-subtitle text-muted text-uppercase">KYC Breakdown</h6>
+        <div class="d-flex justify-content-around mt-2">
+          <div class="text-center">
+            <h4 class="fw-bold">{{ kycBreakdown.BASIC }}</h4>
+            <small class="text-muted">BASIC</small>
+          </div>
+          <div class="text-center">
+            <h4 class="fw-bold">{{ kycBreakdown.ADVANCED }}</h4>
+            <small class="text-muted">ADVANCED</small>
+          </div>
+          <div class="text-center">
+            <h4 class="fw-bold">{{ kycBreakdown.INSTITUTIONAL }}</h4>
+            <small class="text-muted">INST.</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Parties Table -->
+<div class="card shadow-sm">
+  <div class="card-header">
+    <h5>All Parties</h5>
+  </div>
+  <div class="card-body">
+    <div *ngIf="isLoading" class="text-center"><div class="spinner-border"></div></div>
+    <div *ngIf="!isLoading" class="table-responsive">
+      <table class="table table-hover align-middle">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>KYC Level</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let party of parties">
+            <td>{{ party.id }}</td>
+            <td>{{ party.name }}</td>
+            <td>{{ party.kycLevel }}</td>
+            <td>
+              <span class="badge" [ngClass]="{'text-bg-success': party.status === 'ACTIVE', 'text-bg-warning': party.status === 'SUSPENDED'}">
+                {{ party.status }}
+              </span>
+            </td>
+            <td>
+              <div class="btn-group">
+                <button class="btn btn-sm btn-outline-secondary">Edit</button>
+                <button *ngIf="party.status === 'ACTIVE'" class="btn btn-sm btn-outline-warning" (click)="updateStatus(party.id, 'SUSPENDED')">Suspend</button>
+                <button *ngIf="party.status !== 'ACTIVE'" class="btn btn-sm btn-outline-success" (click)="updateStatus(party.id, 'ACTIVE')">Activate</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
