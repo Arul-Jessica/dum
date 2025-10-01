@@ -1,0 +1,11 @@
+<canvas #lineCanvas width="800" height="300"></canvas>
+
+<div style="margin-top:10px; max-height:200px; overflow-y:auto; border:1px solid #ccc; padding:5px;">
+  <ul style="list-style:none; padding:0; margin:0;">
+    <li *ngFor="let t of lastTrades">
+      <span [style.color]="t.side==='buy' ? 'green' : 'red'">
+        {{ t.side | uppercase }} {{ t.price }} × {{ t.size }} ({{ t.ts | date:'mediumTime' }})
+      </span>
+    </li>
+  </ul>
+</div>
