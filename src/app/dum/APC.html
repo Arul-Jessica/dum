@@ -1,0 +1,142 @@
+<!-- src/app/features/user/components/asset-price-chart/asset-price-chart.component.html -->
+<div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+  <!-- Header with Asset Selector -->
+  <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+    <div class="flex-1">
+      <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">Asset Price Trends</h2>
+      
+      <!-- Asset Info -->
+      <div *ngIf="assetPriceData" class="flex items-center gap-4">
+        <div>
+          <p class="text-sm text-gray-500 dark:text-gray-400">{{ assetPriceData.assetName }}</p>
+          <p class="text-3xl font-bold text-gray-900 dark:text-white">
+            {{ formatPrice(assetPriceData.currentPrice) }}
+          </p>
+        </div>
+        <div [class]="isPriceUp() ? 'text-green-600' : 'text-red-600'">
+          <p class="text-lg font-semibold flex items-center">
+            <span *ngIf="isPriceUp()">↑</span>
+            <span *ngIf="!isPriceUp()">↓</span>
+            {{ formatPrice(Math.abs(assetPriceData.priceChange24h)) }}
+          </p>
+          <p class="text-sm">
+            {{ formatPercentage(assetPriceData.priceChangePercentage) }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="flex flex-col sm:flex-row gap-3">
+      <!-- Asset Selector -->
+      <select 
+        [(ngModel)]="selectedAssetId"
+        (change)="onAssetChange(selectedAssetId)"
+        class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+        <option *ngFor="let asset of availableAssets" [value]="asset.id">
+          {{ asset.name }}
+        </option>
+      </select>
+
+      <!-- Timeframe Selector -->
+      <div class="flex gap-1 bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
+        <button 
+          *ngFor="let timeframe of ['7d', '30d', '90d']"
+          (click)="onTimeframeChange(timeframe)"
+          [class]="selectedTimeframe === timeframe 
+            ? 'bg-white dark:bg-gray-800 text-blue-600 dark:text-blue-400 shadow-sm' 
+            : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'"
+          class="px-4 py-2 rounded-md text-sm font-medium transition-all">
+          {{ timeframe }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="flex justify-center items-center h-96">
+    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+  </div>
+
+  <!-- Chart -->
+  <div *ngIf="!loading && assetPriceData" class="relative">
+    <!-- SVG Chart -->
+    <svg class="w-full" viewBox="0 0 800 350" preserveAspectRatio="xMidYMid meet">
+      <!-- Grid Lines -->
+      <g class="grid">
+        <line *ngFor="let line of getGridLines()" 
+          [attr.x1]="40" 
+          [attr.y1]="40 + line * 52" 
+          [attr.x2]="760" 
+          [attr.y2]="40 + line * 52"
+          stroke="#e5e7eb" 
+          stroke-width="1" 
+          stroke-dasharray="5,5" />
+      </g>
+
+      <!-- Price Line -->
+      <polyline
+        [attr.points]="getChartPoints()"
+        fill="none"
+        [attr.stroke]="isPriceUp() ? '#10b981' : '#ef4444'"
+        stroke-width="3"
+        stroke-linecap="round"
+        stroke-linejoin="round" />
+
+      <!-- Area Fill -->
+      <polygon
+        [attr.points]="getChartPoints() + ' 760,300 40,300'"
+        [attr.fill]="isPriceUp() ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)'" />
+
+      <!-- Y-axis labels -->
+      <text *ngFor="let i of [0, 1, 2, 3, 4]" 
+        x="10" 
+        [attr.y]="40 + i * 52 + 5"
+        class="text-xs fill-gray-600 dark:fill-gray-400"
+        text-anchor="start">
+        {{ formatPrice(assetPriceData.currentPrice * (1.2 - i * 0.1)) }}
+      </text>
+
+      <!-- X-axis labels -->
+      <g *ngIf="assetPriceData.history.length > 0">
+        <text x="40" y="335" class="text-xs fill-gray-600 dark:fill-gray-400" text-anchor="start">
+          {{ assetPriceData.history[0].timestamp | date: 'MMM d' }}
+        </text>
+        <text x="400" y="335" class="text-xs fill-gray-600 dark:fill-gray-400" text-anchor="middle">
+          {{ assetPriceData.history[Math.floor(assetPriceData.history.length / 2)].timestamp | date: 'MMM d' }}
+        </text>
+        <text x="760" y="335" class="text-xs fill-gray-600 dark:fill-gray-400" text-anchor="end">
+          {{ assetPriceData.history[assetPriceData.history.length - 1].timestamp | date: 'MMM d' }}
+        </text>
+      </g>
+    </svg>
+
+    <!-- Stats Row -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+      <div>
+        <p class="text-sm text-gray-500 dark:text-gray-400">High</p>
+        <p class="text-lg font-semibold text-gray-900 dark:text-white">
+          {{ formatPrice(Math.max(...(assetPriceData.history.map(p => p.price)))) }}
+        </p>
+      </div>
+      <div>
+        <p class="text-sm text-gray-500 dark:text-gray-400">Low</p>
+        <p class="text-lg font-semibold text-gray-900 dark:text-white">
+          {{ formatPrice(Math.min(...(assetPriceData.history.map(p => p.price)))) }}
+        </p>
+      </div>
+      <div>
+        <p class="text-sm text-gray-500 dark:text-gray-400">Avg Volume</p>
+        <p class="text-lg font-semibold text-gray-900 dark:text-white">
+          {{ (assetPriceData.history.reduce((sum, p) => sum + (p.volume || 0), 0) / assetPriceData.history.length).toFixed(0) }}
+        </p>
+      </div>
+      <div>
+        <p class="text-sm text-gray-500 dark:text-gray-400">Data Points</p>
+        <p class="text-lg font-semibold text-gray-900 dark:text-white">
+          {{ assetPriceData.history.length }}
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

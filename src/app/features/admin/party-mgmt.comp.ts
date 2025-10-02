@@ -65,4 +65,4 @@ export class PartyManagementComponent implements OnInit {
       error: (err) => this.toastr.error(err.error.message, "Update Failed")
     });
   }
-}
+} 
