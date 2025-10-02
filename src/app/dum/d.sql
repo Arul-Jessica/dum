@@ -130,26 +130,40 @@ INSERT INTO AJ_CASH_LEDGER (wallet_id, currency, amount) VALUES
 (25, 'USD', 6500.0000), (27, 'USD', 9700.0000);
 
 -- ===================================================================
--- 8. INSERT POSITIONS (Asset holdings in ASSET wallets)
+-- 8. INSERT POSITIONS (Asset holdings in ASSET wallets - ALL 8 ASSETS)
 -- ===================================================================
 INSERT INTO AJ_POSITION (wallet_id, asset_id, quantity) VALUES
-(2, 1, 25.500000000000000000), (2, 2, 150.750000000000000000),
+-- Goldman Sachs - diversified portfolio
+(2, 1, 25.500000000000000000), (2, 2, 150.750000000000000000), (2, 4, 10.250000000000000000),
+-- Morgan Stanley - precious metals focus
 (4, 1, 40.000000000000000000), (4, 2, 200.000000000000000000), (4, 3, 15.000000000000000000),
+-- JPMorgan - real estate and bonds
 (6, 4, 30.500000000000000000), (6, 6, 100.000000000000000000), (6, 7, 75.000000000000000000),
+-- BlackRock - balanced
 (8, 1, 35.250000000000000000), (8, 4, 20.000000000000000000), (8, 8, 50.000000000000000000),
+-- Vanguard - conservative bonds
 (10, 6, 150.000000000000000000), (10, 7, 120.000000000000000000),
+-- Fidelity - growth assets
 (12, 1, 28.750000000000000000), (12, 5, 12.500000000000000000), (12, 8, 60.000000000000000000),
+-- Schwab - mixed
 (14, 2, 180.000000000000000000), (14, 3, 18.000000000000000000), (14, 6, 90.000000000000000000),
+-- State Street - institutional
 (16, 1, 45.000000000000000000), (16, 4, 25.000000000000000000), (16, 7, 110.000000000000000000),
+-- BNY Mellon - wealth preservation
 (18, 1, 22.500000000000000000), (18, 3, 12.000000000000000000), (18, 6, 85.000000000000000000),
+-- Citigroup - trading focused
 (20, 1, 38.000000000000000000), (20, 2, 220.000000000000000000), (20, 8, 55.000000000000000000),
+-- Wells Fargo - traditional
 (22, 1, 30.000000000000000000), (22, 6, 130.000000000000000000), (22, 7, 95.000000000000000000),
+-- Bank of America - aggressive
 (24, 4, 35.000000000000000000), (24, 5, 15.000000000000000000), (24, 8, 70.000000000000000000),
+-- Deutsche Bank - European focus
 (26, 1, 32.500000000000000000), (26, 2, 190.000000000000000000), (26, 3, 16.000000000000000000),
+-- Credit Suisse - premium assets
 (28, 5, 20.000000000000000000), (28, 3, 22.000000000000000000), (28, 8, 65.000000000000000000);
 
 -- ===================================================================
--- 9. INSERT ORDERS (Buy and Sell orders with various statuses)
+-- 9. INSERT ORDERS (Buy and Sell orders - ALL 8 ASSETS for diversity)
 -- ===================================================================
 INSERT INTO AJ_ORDER (id, wallet_id, asset_id, order_type, price, quantity, status) VALUES
 (1, 2, 1, 'BUY', 1925.50, 5, 'FILLED'),
@@ -174,16 +188,15 @@ INSERT INTO AJ_ORDER (id, wallet_id, asset_id, order_type, price, quantity, stat
 (20, 12, 3, 'BUY', 2855.00, 3, 'FILLED');
 
 -- ===================================================================
--- 10. INSERT TRADES (Matched orders with settlement status)
+-- 10. INSERT TRADES (Matched orders - VERIFIED referential integrity)
 -- ===================================================================
 INSERT INTO AJ_TRADE (buy_order_id, sell_order_id, asset_id, quantity, price, status) VALUES
 (1, 2, 1, 3, 1927.75, 'SETTLED'),
 (4, 8, 1, 2, 1927.50, 'SETTLED'),
 (10, 16, 8, 8, 449.25, 'SETTLED'),
-(12, 6, 4, 1, 5202.50, 'SETTLED'),
+(12, 6, 4, 2, 5202.50, 'SETTLED'),
 (15, 19, 7, 12, 1049.375, 'UNSETTLED'),
-(18, 2, 1, 2, 1928.50, 'SETTLED'),
-(20, 13, 3, 3, 2852.50, 'FAILED');
+(18, 11, 1, 3, 1929.25, 'SETTLED');
 
 -- ===================================================================
 -- 11. INSERT EVENT_LOG (Blockchain-style with genesis block)
