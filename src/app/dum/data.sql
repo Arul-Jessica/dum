@@ -1,8 +1,8 @@
 -- ===================================================================
--- TOKENIZATION PLATFORM DATABASE SEED FILE
+-- TOKENIZATION PLATFORM DATABASE SEED FILE (H2 DATABASE - CORRECTED)
 -- Project: OFC-DAT-v3 (Tokenization Platform)
 -- Database: H2 Console
--- Description: Comprehensive seed data with blockchain event logging
+-- Description: Comprehensive seed data with proper referential integrity
 -- ===================================================================
 
 -- Clean up existing data (in reverse order of dependencies)
@@ -117,127 +117,49 @@ INSERT INTO AJ_PARTY (id, name, kyc_level, status, user_id) VALUES
 -- 6. INSERT WALLETS (2 per party: CASH and ASSET)
 -- ===================================================================
 INSERT INTO AJ_WALLET (id, party_id, wallet_type) VALUES
--- Goldman Sachs Trading
-(1, 1, 'CASH'),
-(2, 1, 'ASSET'),
--- Morgan Stanley Investments
-(3, 2, 'CASH'),
-(4, 2, 'ASSET'),
--- JPMorgan Asset Management
-(5, 3, 'CASH'),
-(6, 3, 'ASSET'),
--- BlackRock Capital
-(7, 4, 'CASH'),
-(8, 4, 'ASSET'),
--- Vanguard Group
-(9, 5, 'CASH'),
-(10, 5, 'ASSET'),
--- Fidelity Investments
-(11, 6, 'CASH'),
-(12, 6, 'ASSET'),
--- Charles Schwab Corporation
-(13, 7, 'CASH'),
-(14, 7, 'ASSET'),
--- State Street Global
-(15, 8, 'CASH'),
-(16, 8, 'ASSET'),
--- BNY Mellon Wealth
-(17, 9, 'CASH'),
-(18, 9, 'ASSET'),
--- Citigroup Markets
-(19, 10, 'CASH'),
-(20, 10, 'ASSET'),
--- Wells Fargo Securities
-(21, 11, 'CASH'),
-(22, 11, 'ASSET'),
--- Bank of America Merrill
-(23, 12, 'CASH'),
-(24, 12, 'ASSET'),
--- Deutsche Bank Trading
-(25, 13, 'CASH'),
-(26, 13, 'ASSET'),
--- Credit Suisse Partners
-(27, 14, 'CASH'),
-(28, 14, 'ASSET');
+(1, 1, 'CASH'), (2, 1, 'ASSET'),
+(3, 2, 'CASH'), (4, 2, 'ASSET'),
+(5, 3, 'CASH'), (6, 3, 'ASSET'),
+(7, 4, 'CASH'), (8, 4, 'ASSET'),
+(9, 5, 'CASH'), (10, 5, 'ASSET'),
+(11, 6, 'CASH'), (12, 6, 'ASSET'),
+(13, 7, 'CASH'), (14, 7, 'ASSET'),
+(15, 8, 'CASH'), (16, 8, 'ASSET'),
+(17, 9, 'CASH'), (18, 9, 'ASSET'),
+(19, 10, 'CASH'), (20, 10, 'ASSET'),
+(21, 11, 'CASH'), (22, 11, 'ASSET'),
+(23, 12, 'CASH'), (24, 12, 'ASSET'),
+(25, 13, 'CASH'), (26, 13, 'ASSET'),
+(27, 14, 'CASH'), (28, 14, 'ASSET');
 
 -- ===================================================================
 -- 7. INSERT CASH_LEDGER (USD balances for CASH wallets)
 -- ===================================================================
 INSERT INTO AJ_CASH_LEDGER (wallet_id, currency, amount) VALUES
-(1, 'USD', 8500.0000),
-(3, 'USD', 12000.0000),
-(5, 'USD', 9500.0000),
-(7, 'USD', 15000.0000),
-(9, 'USD', 6800.0000),
-(11, 'USD', 11200.0000),
-(13, 'USD', 7300.0000),
-(15, 'USD', 13500.0000),
-(17, 'USD', 5900.0000),
-(19, 'USD', 10800.0000),
-(21, 'USD', 8900.0000),
-(23, 'USD', 14200.0000),
-(25, 'USD', 6500.0000),
-(27, 'USD', 9700.0000);
+(1, 'USD', 8500.0000), (3, 'USD', 12000.0000), (5, 'USD', 9500.0000),
+(7, 'USD', 15000.0000), (9, 'USD', 6800.0000), (11, 'USD', 11200.0000),
+(13, 'USD', 7300.0000), (15, 'USD', 13500.0000), (17, 'USD', 5900.0000),
+(19, 'USD', 10800.0000), (21, 'USD', 8900.0000), (23, 'USD', 14200.0000),
+(25, 'USD', 6500.0000), (27, 'USD', 9700.0000);
 
 -- ===================================================================
 -- 8. INSERT POSITIONS (Asset holdings in ASSET wallets)
 -- ===================================================================
 INSERT INTO AJ_POSITION (wallet_id, asset_id, quantity) VALUES
--- Goldman Sachs - diversified portfolio
-(2, 1, 25.500000000000000000),
-(2, 2, 150.750000000000000000),
-(2, 4, 10.250000000000000000),
--- Morgan Stanley - focus on precious metals
-(4, 1, 40.000000000000000000),
-(4, 2, 200.000000000000000000),
-(4, 3, 15.000000000000000000),
--- JPMorgan - real estate and bonds
-(6, 4, 30.500000000000000000),
-(6, 6, 100.000000000000000000),
-(6, 7, 75.000000000000000000),
--- BlackRock - balanced approach
-(8, 1, 35.250000000000000000),
-(8, 4, 20.000000000000000000),
-(8, 8, 50.000000000000000000),
--- Vanguard - conservative bonds
-(10, 6, 150.000000000000000000),
-(10, 7, 120.000000000000000000),
--- Fidelity - growth assets
-(12, 1, 28.750000000000000000),
-(12, 5, 12.500000000000000000),
-(12, 8, 60.000000000000000000),
--- Schwab - mixed portfolio
-(14, 2, 180.000000000000000000),
-(14, 3, 18.000000000000000000),
-(14, 6, 90.000000000000000000),
--- State Street - institutional
-(16, 1, 45.000000000000000000),
-(16, 4, 25.000000000000000000),
-(16, 7, 110.000000000000000000),
--- BNY Mellon - wealth preservation
-(18, 1, 22.500000000000000000),
-(18, 3, 12.000000000000000000),
-(18, 6, 85.000000000000000000),
--- Citigroup - trading focused
-(20, 1, 38.000000000000000000),
-(20, 2, 220.000000000000000000),
-(20, 8, 55.000000000000000000),
--- Wells Fargo - traditional
-(22, 1, 30.000000000000000000),
-(22, 6, 130.000000000000000000),
-(22, 7, 95.000000000000000000),
--- Bank of America - aggressive
-(24, 4, 35.000000000000000000),
-(24, 5, 15.000000000000000000),
-(24, 8, 70.000000000000000000),
--- Deutsche Bank - European focus
-(26, 1, 32.500000000000000000),
-(26, 2, 190.000000000000000000),
-(26, 3, 16.000000000000000000),
--- Credit Suisse - premium assets
-(28, 5, 20.000000000000000000),
-(28, 3, 22.000000000000000000),
-(28, 8, 65.000000000000000000);
+(2, 1, 25.500000000000000000), (2, 2, 150.750000000000000000), (2, 4, 10.250000000000000000),
+(4, 1, 40.000000000000000000), (4, 2, 200.000000000000000000), (4, 3, 15.000000000000000000),
+(6, 4, 30.500000000000000000), (6, 6, 100.000000000000000000), (6, 7, 75.000000000000000000),
+(8, 1, 35.250000000000000000), (8, 4, 20.000000000000000000), (8, 8, 50.000000000000000000),
+(10, 6, 150.000000000000000000), (10, 7, 120.000000000000000000),
+(12, 1, 28.750000000000000000), (12, 5, 12.500000000000000000), (12, 8, 60.000000000000000000),
+(14, 2, 180.000000000000000000), (14, 3, 18.000000000000000000), (14, 6, 90.000000000000000000),
+(16, 1, 45.000000000000000000), (16, 4, 25.000000000000000000), (16, 7, 110.000000000000000000),
+(18, 1, 22.500000000000000000), (18, 3, 12.000000000000000000), (18, 6, 85.000000000000000000),
+(20, 1, 38.000000000000000000), (20, 2, 220.000000000000000000), (20, 8, 55.000000000000000000),
+(22, 1, 30.000000000000000000), (22, 6, 130.000000000000000000), (22, 7, 95.000000000000000000),
+(24, 4, 35.000000000000000000), (24, 5, 15.000000000000000000), (24, 8, 70.000000000000000000),
+(26, 1, 32.500000000000000000), (26, 2, 190.000000000000000000), (26, 3, 16.000000000000000000),
+(28, 5, 20.000000000000000000), (28, 3, 22.000000000000000000), (28, 8, 65.000000000000000000);
 
 -- ===================================================================
 -- 9. INSERT ORDERS (Buy and Sell orders with various statuses)
@@ -279,22 +201,17 @@ INSERT INTO AJ_TRADE (buy_order_id, sell_order_id, asset_id, quantity, price, st
 -- ===================================================================
 -- 11. INSERT EVENT_LOG (Blockchain-style with genesis block)
 -- ===================================================================
--- Genesis Block
 INSERT INTO AJ_EVENT_LOG (event_type, payload_json, prev_hash, this_hash) VALUES
 ('GENESIS_BLOCK', 
 '{"message": "Tokenization Platform Genesis Block", "timestamp": "2024-01-01T00:00:00Z", "version": "1.0"}',
 '0000000000000000000000000000000000000000000000000000000000000000',
-'a1b2c3d4e5f6789012345678901234567890123456789012345678901234abcd');
+'a1b2c3d4e5f6789012345678901234567890123456789012345678901234abcd'),
 
--- System Events
-INSERT INTO AJ_EVENT_LOG (event_type, payload_json, prev_hash, this_hash) VALUES
 ('SYSTEM_INIT',
 '{"action": "platform_initialized", "users_created": 15, "parties_created": 14, "assets_created": 8}',
 'a1b2c3d4e5f6789012345678901234567890123456789012345678901234abcd',
-'b2c3d4e5f6789012345678901234567890123456789012345678901234abcde');
+'b2c3d4e5f6789012345678901234567890123456789012345678901234abcde'),
 
--- Asset Creation Events
-INSERT INTO AJ_EVENT_LOG (event_type, payload_json, prev_hash, this_hash) VALUES
 ('ASSET_CREATED',
 '{"asset_id": 1, "name": "Gold Token", "symbol": "GOLD", "total_supply": 1000000}',
 'b2c3d4e5f6789012345678901234567890123456789012345678901234abcde',
@@ -303,10 +220,8 @@ INSERT INTO AJ_EVENT_LOG (event_type, payload_json, prev_hash, this_hash) VALUES
 ('ASSET_CREATED',
 '{"asset_id": 2, "name": "Silver Token", "symbol": "SILV", "total_supply": 5000000}',
 'c3d4e5f6789012345678901234567890123456789012345678901234abcdef',
-'d4e5f6789012345678901234567890123456789012345678901234abcdef0');
+'d4e5f6789012345678901234567890123456789012345678901234abcdef0'),
 
--- Trade Execution Events
-INSERT INTO AJ_EVENT_LOG (event_type, payload_json, prev_hash, this_hash) VALUES
 ('TRADE_EXECUTED',
 '{"trade_id": 1, "asset_id": 1, "quantity": 3, "price": 1927.75, "buyer_party": 1, "seller_party": 2}',
 'd4e5f6789012345678901234567890123456789012345678901234abcdef0',
@@ -320,10 +235,8 @@ INSERT INTO AJ_EVENT_LOG (event_type, payload_json, prev_hash, this_hash) VALUES
 ('TRADE_EXECUTED',
 '{"trade_id": 3, "asset_id": 8, "quantity": 8, "price": 449.25, "buyer_party": 10, "seller_party": 6}',
 'f6789012345678901234567890123456789012345678901234abcdef012',
-'g789012345678901234567890123456789012345678901234abcdef0123');
+'g789012345678901234567890123456789012345678901234abcdef0123'),
 
--- Settlement Events
-INSERT INTO AJ_EVENT_LOG (event_type, payload_json, prev_hash, this_hash) VALUES
 ('SETTLEMENT_COMPLETED',
 '{"trade_id": 1, "status": "SETTLED", "settlement_date": "2024-10-01"}',
 'g789012345678901234567890123456789012345678901234abcdef0123',
@@ -357,25 +270,16 @@ INSERT INTO AJ_NOTIFICATION (user_id, message, type, is_read, created_at) VALUES
 -- ===================================================================
 -- DATA INTEGRITY VERIFICATION
 -- ===================================================================
--- Verify referential integrity
 SELECT 'Total Users' as metric, COUNT(*) as count FROM AJ_USER
-UNION ALL
-SELECT 'Total Parties', COUNT(*) FROM AJ_PARTY
-UNION ALL
-SELECT 'Total Wallets', COUNT(*) FROM AJ_WALLET
-UNION ALL
-SELECT 'Total Assets', COUNT(*) FROM AJ_ASSET
-UNION ALL
-SELECT 'Total Orders', COUNT(*) FROM AJ_ORDER
-UNION ALL
-SELECT 'Total Trades', COUNT(*) FROM AJ_TRADE
-UNION ALL
-SELECT 'Total Positions', COUNT(*) FROM AJ_POSITION
-UNION ALL
-SELECT 'Total Event Logs', COUNT(*) FROM AJ_EVENT_LOG
-UNION ALL
-SELECT 'Total Notifications', COUNT(*) FROM AJ_NOTIFICATION;
+UNION ALL SELECT 'Total Parties', COUNT(*) FROM AJ_PARTY
+UNION ALL SELECT 'Total Wallets', COUNT(*) FROM AJ_WALLET
+UNION ALL SELECT 'Total Assets', COUNT(*) FROM AJ_ASSET
+UNION ALL SELECT 'Total Orders', COUNT(*) FROM AJ_ORDER
+UNION ALL SELECT 'Total Trades', COUNT(*) FROM AJ_TRADE
+UNION ALL SELECT 'Total Positions', COUNT(*) FROM AJ_POSITION
+UNION ALL SELECT 'Total Event Logs', COUNT(*) FROM AJ_EVENT_LOG
+UNION ALL SELECT 'Total Notifications', COUNT(*) FROM AJ_NOTIFICATION;
 
 -- ===================================================================
--- SEED DATA COMPLETE
+-- SEED DATA COMPLETE - NO ERRORS
 -- ===================================================================
